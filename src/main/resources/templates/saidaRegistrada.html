@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saída registrada | Estacionamento</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+<main class="page-container">
+    <section class="card card-wide">
+        <header class="card-header">
+            <span class="brand-badge">Estacionamento</span>
+            <h1>Saída registrada</h1>
+            <p>O veículo abaixo teve a saída registrada com sucesso.</p>
+        </header>
+
+        <div class="success-box">
+            <span class="success-icon">✓</span>
+            <div>
+                <strong>Saída registrada com sucesso!</strong>
+            </div>
+        </div>
+
+        <div class="detail-list">
+            <div class="detail-row">
+                <span>Placa</span>
+                <span th:text="${veiculo.placa}">Placa</span>
+            </div>
+            <div class="detail-row">
+                <span>Cor</span>
+                <span th:text="${veiculo.cor}">Cor</span>
+            </div>
+            <div class="detail-row">
+                <span>Modelo</span>
+                <span th:text="${veiculo.modelo}">Modelo</span>
+            </div>
+            <div class="detail-row">
+                <span>Entrada</span>
+                <span th:text="${#temporals.format(veiculo.horaEntrada, 'dd/MM/yyyy HH:mm')}">Entrada</span>
+            </div>
+            <div class="detail-row">
+                <span>Horário de saída</span>
+                <span class="horario-saida" th:text="${#temporals.format(veiculo.horaSaida, 'dd/MM/yyyy HH:mm:ss')}">Saída</span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="/veiculo/registrarSaida" class="btn btn-primary">Registrar outra saída</a>
+            <a href="/painel?tab=veiculos" class="btn btn-secondary">Voltar para o painel</a>
+        </div>
+    </section>
+
+    <footer class="project-footer">
+        <strong>Projeto desenvolvido para o SEBRAE</strong>
+        <span>Estacionamento • Gestão simples e eficiente</span>
+    </footer>
+</main>
+</body>
+</html>

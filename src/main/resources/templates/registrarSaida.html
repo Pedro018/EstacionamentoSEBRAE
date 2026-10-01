@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar saída | Estacionamento</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+<main class="page-container">
+    <section class="card card-wide">
+        <header class="card-header">
+            <span class="brand-badge">Estacionamento</span>
+            <h1>Registrar saída</h1>
+            <p>Selecione a placa do veículo para registrar a saída do estacionamento.</p>
+        </header>
+
+        <div th:if="${mensagemErro}" class="error-box" th:text="${mensagemErro}">Erro</div>
+
+        <div th:if="${#lists.isEmpty(veiculosEstacionados)}" class="empty-state">
+            Nenhum veículo estacionado no momento.
+        </div>
+
+        <form th:if="${not #lists.isEmpty(veiculosEstacionados)}"
+              action="#" th:action="@{/veiculo/registrarSaida}" method="post" class="form">
+            <div class="form-group">
+                <label for="placaId">Selecione sua placa</label>
+                <select id="placaId" name="id" required>
+                    <option value="" disabled selected>Selecione sua placa</option>
+                    <option th:each="veiculo : ${veiculosEstacionados}"
+                            th:value="${veiculo.id}"
+                            th:text="${veiculo.placa} + ' — ' + ${veiculo.cor} + (${veiculo.modelo} != null ? ' (' + ${veiculo.modelo} + ')' : '')">
+                        Placa — Cor
+                    </option>
+                </select>
+
+                <div class="form-group full-width">
+                    <label for="observacoes">Observações</label>
+                    <input type="text" id="observacoes" name="observacoes" placeholder="Digite as observações">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Registrar saída</button>
+                <a href="/painel?tab=veiculos" class="btn btn-secondary">Voltar para o painel</a>
+            </div>
+        </form>
+    </section>
+
+    <footer class="project-footer">
+        <strong>Projeto desenvolvido para o SEBRAE</strong>
+        <span>Estacionamento • Gestão simples e eficiente</span>
+    </footer>
+</main>
+</body>
+</html>

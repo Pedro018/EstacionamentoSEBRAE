@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Estacionamento</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+<main class="page-container">
+    <section class="card">
+        <header class="card-header">
+            <span class="brand-badge">Estacionamento</span>
+            <h1>Bem-vindo</h1>
+            <p>Entre na sua conta para acessar o sistema.</p>
+        </header>
+
+        <form action="/login" method="post" class="form">
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+            </div>
+
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+
+        <p class="form-footer">Não tem cadastro? <a href="/cadastrar">Cadastre-se</a></p>
+    </section>
+
+    <footer class="project-footer">
+        <strong>Projeto desenvolvido para o SEBRAE</strong>
+        <span>Estacionamento • Gestão simples e eficiente</span>
+    </footer>
+</main>
+</body>
+</html>

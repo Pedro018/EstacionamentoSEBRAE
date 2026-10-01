@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar entrada | Estacionamento</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+<main class="page-container">
+    <section class="card card-wide">
+        <header class="card-header">
+            <span class="brand-badge">Estacionamento</span>
+            <h1>Registrar entrada</h1>
+            <p>Preencha os dados do veículo para registrar a entrada no estacionamento.</p>
+        </header>
+
+        <form action="/veiculo/cadastro" method="post" class="form form-grid">
+            <div class="form-group">
+                <label for="placa">Placa</label>
+                <input type="text" id="placa" name="placa" placeholder="Digite a placa" required>
+            </div>
+
+            <div class="form-group">
+                <label for="modelo">Modelo</label>
+                <input type="text" id="modelo" name="modelo" placeholder="Digite o modelo" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cor">Cor</label>
+                <input type="text" id="cor" name="cor" placeholder="Digite a cor" required>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="observacoes">Observações</label>
+                <input type="text" id="observacoes" name="observacoes" placeholder="Digite as observações">
+            </div>
+
+            <div class="form-actions full-width">
+                <button type="submit" class="btn btn-primary">Salvar entrada</button>
+                <a href="/painel" class="btn btn-secondary">Voltar para o painel</a>
+            </div>
+        </form>
+    </section>
+
+    <footer class="project-footer">
+        <strong>Projeto desenvolvido para o SEBRAE</strong>
+        <span>Estacionamento • Gestão simples e eficiente</span>
+    </footer>
+</main>
+</body>
+</html>
