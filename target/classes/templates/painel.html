@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
         <header class="card-header">
             <span class="brand-badge">Estacionamento</span>
             <h1>Painel</h1>
-            <p>Você está conectado ao sistema.</p>
+            <p>Controle de entradas e saídas do estacionamento.</p>
         </header>
 
         <div th:if="${mensagemSucesso}" class="success-box">
@@ -23,85 +23,58 @@
         </div>
         <div th:if="${mensagemErro}" class="error-box" th:text="${mensagemErro}">Erro</div>
 
-        <div class="tabs">
-            <button type="button" class="tab-btn" data-tab="geral">Visão geral</button>
-            <button type="button" class="tab-btn" data-tab="veiculos">Veículos</button>
+        <nav class="form-actions">
+            <a href="/painel" class="btn btn-primary">Painel</a>
+            <a href="/movimentacoes" class="btn btn-secondary">Movimentações</a>
+            <a href="/relatorios" class="btn btn-secondary">Relatórios</a>
+            <a href="/" class="btn btn-secondary">Sair</a>
+        </nav>
+
+        <div class="form-actions">
+            <a href="/veiculo/registarEntrada" class="btn btn-primary">Registrar Entrada</a>
+            <a href="/veiculo/registrarSaida" class="btn btn-secondary">Registrar Saída</a>
         </div>
 
-        <div class="tab-panel" data-tab-panel="geral">
-            <div class="success-box">
-                <span class="success-icon">✓</span>
-                <div>
-                    <strong>Login realizado com sucesso!</strong>
-                    <p>Bem-vindo ao painel de gerenciamento.</p>
-                </div>
-            </div>
-            <a href="/" class="btn btn-secondary btn-full">Sair</a>
+        <h2 class="section-title">
+            Veículos no Estacionamento
+            <span class="status-summary" th:text="${totalEstacionados} + ' estacionado(s) agora'">0 estacionado(s) agora</span>
+        </h2>
+        <div th:if="${#lists.isEmpty(veiculos)}" class="empty-state">
+            Nenhum veículo estacionado no momento.
+        </div>
+        <div th:if="${not #lists.isEmpty(veiculos)}" class="table-wrapper">
+            <table class="veiculos-table">
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Modelo</th>
+                        <th>Hora de Entrada</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="veiculo : ${veiculos}">
+                        <td th:text="${veiculo.placa}">Placa</td>
+                        <td th:text="${veiculo.modelo}">Modelo</td>
+                        <td th:text="${#temporals.format(veiculo.horaEntrada, 'HH:mm')}">Entrada</td>
+                        <td><span class="badge badge-estacionado">Estacionado</span></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <div class="tab-panel" data-tab-panel="veiculos">
-            <h2 class="section-title">Registrar entrada</h2>
-            <form action="/veiculo/cadastro" method="post" class="form form-grid">
-                <div class="form-group">
-                    <label for="placa">Placa</label>
-                    <input type="text" id="placa" name="placa" placeholder="Digite a placa" required>
-                </div>
-                <div class="form-group">
-                    <label for="modelo">Modelo</label>
-                    <input type="text" id="modelo" name="modelo" placeholder="Digite o modelo" required>
-                </div>
-                <div class="form-group">
-                    <label for="cor">Cor</label>
-                    <input type="text" id="cor" name="cor" placeholder="Digite a cor" required>
-                </div>
-                <div class="form-group full-width">
-                    <label for="observacoes">Observações</label>
-                    <input type="text" id="observacoes" name="observacoes" placeholder="Digite as observações">
-                </div>
-                <div class="form-actions full-width">
-                    <button type="submit" class="btn btn-primary">Registrar entrada</button>
-                </div>
-            </form>
-
-            <div class="form-actions">
-                <a href="/veiculo/registrarSaida" class="btn btn-primary">Registrar saída</a>
+        <div class="detail-list">
+            <div class="detail-row">
+                <span>Vagas Ocupadas</span>
+                <span th:text="${vagasOcupadas}">0</span>
             </div>
-
-            <h2 class="section-title">
-                Entradas e saídas
-                <span class="status-summary" th:text="${totalEstacionados} + ' estacionado(s) agora'">0 estacionado(s) agora</span>
-            </h2>
-            <div th:if="${#lists.isEmpty(veiculos)}" class="empty-state">
-                Nenhum veículo registrado até o momento.
+            <div class="detail-row">
+                <span>Vagas Disponíveis</span>
+                <span th:text="${vagasDisponiveis}">30</span>
             </div>
-            <div th:if="${not #lists.isEmpty(veiculos)}" class="table-wrapper">
-                <table class="veiculos-table">
-                    <thead>
-                        <tr>
-                            <th>Placa</th>
-                            <th>Modelo</th>
-                            <th>Cor</th>
-                            <th>Observações</th>
-                            <th>Entrada</th>
-                            <th>Saída</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="veiculo : ${veiculos}">
-                            <td th:text="${veiculo.placa}">Placa</td>
-                            <td th:text="${veiculo.modelo}">Modelo</td>
-                            <td th:text="${veiculo.cor}">Cor</td>
-                            <td th:text="${veiculo.observacoes}">Observações</td>
-                            <td th:text="${#temporals.format(veiculo.horaEntrada, 'dd/MM/yyyy HH:mm')}">Entrada</td>
-                            <td th:text="${veiculo.horaSaida != null ? #temporals.format(veiculo.horaSaida, 'dd/MM/yyyy HH:mm') : '-'}">Saída</td>
-                            <td>
-                                <span th:if="${veiculo.estacionado}" class="badge badge-estacionado">Estacionado</span>
-                                <span th:unless="${veiculo.estacionado}" class="badge badge-saiu">Saiu</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="detail-row">
+                <span>Total de Vagas</span>
+                <span th:text="${totalVagas}">30</span>
             </div>
         </div>
     </section>
@@ -110,30 +83,5 @@
         <span>Estacionamento • Gestão simples e eficiente</span>
     </footer>
 </main>
-<script th:inline="javascript">
-    (function () {
-        var tabButtons = document.querySelectorAll('.tab-btn');
-        var tabPanels = document.querySelectorAll('.tab-panel');
-
-        function activateTab(tabName) {
-            tabButtons.forEach(function (btn) {
-                btn.classList.toggle('active', btn.getAttribute('data-tab') === tabName);
-            });
-            tabPanels.forEach(function (panel) {
-                panel.classList.toggle('active', panel.getAttribute('data-tab-panel') === tabName);
-            });
-        }
-
-        tabButtons.forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                activateTab(btn.getAttribute('data-tab'));
-            });
-        });
-
-        var params = new URLSearchParams(window.location.search);
-        var initialTab = params.get('tab') === 'veiculos' ? 'veiculos' : 'geral';
-        activateTab(initialTab);
-    })();
-</script>
 </body>
 </html>

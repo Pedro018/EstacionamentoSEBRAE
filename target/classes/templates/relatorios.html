@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios | Estacionamento</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+<main class="page-container">
+    <section class="card card-wide">
+        <header class="card-header">
+            <span class="brand-badge">Estacionamento</span>
+            <h1>Relatórios</h1>
+            <p>Resumo da ocupação e do tempo de permanência.</p>
+        </header>
+
+        <nav class="form-actions">
+            <a href="/painel" class="btn btn-secondary">Painel</a>
+            <a href="/movimentacoes" class="btn btn-secondary">Movimentações</a>
+            <a href="/relatorios" class="btn btn-primary">Relatórios</a>
+            <a href="/" class="btn btn-secondary">Sair</a>
+        </nav>
+
+        <div class="detail-list">
+            <div class="detail-row">
+                <span>Vagas Ocupadas</span>
+                <span th:text="${vagasOcupadas}">0</span>
+            </div>
+            <div class="detail-row">
+                <span>Vagas Disponíveis</span>
+                <span th:text="${vagasDisponiveis}">30</span>
+            </div>
+            <div class="detail-row">
+                <span>Total de Vagas</span>
+                <span th:text="${totalVagas}">30</span>
+            </div>
+        </div>
+
+        <h2 class="section-title">Resumo</h2>
+        <div class="detail-list">
+            <div class="detail-row">
+                <span>Total de movimentações</span>
+                <span th:text="${totalMovimentacoes}">0</span>
+            </div>
+            <div class="detail-row">
+                <span>Tempo médio de permanência</span>
+                <span th:text="${tempoMedio}">0m</span>
+            </div>
+            <div class="detail-row">
+                <span>Ocupação</span>
+                <span>
+                    <progress th:value="${vagasOcupadas}" th:max="${totalVagas}" value="0" max="30"></progress>
+                    <span th:text="${ocupacaoPercentual} + '%'">0%</span>
+                </span>
+            </div>
+        </div>
+    </section>
+    <footer class="project-footer">
+        <strong>Projeto desenvolvido para o SEBRAE</strong>
+        <span>Estacionamento • Gestão simples e eficiente</span>
+    </footer>
+</main>
+</body>
+</html>

@@ -11,8 +11,8 @@
     <section class="card card-wide">
         <header class="card-header">
             <span class="brand-badge">Estacionamento</span>
-            <h1>Registrar saída</h1>
-            <p>Selecione a placa do veículo para registrar a saída do estacionamento.</p>
+            <h1>Registrar Saída de Veículo</h1>
+            <p>Selecione o veículo que está deixando o estacionamento.</p>
         </header>
 
         <div th:if="${mensagemErro}" class="error-box" th:text="${mensagemErro}">Erro</div>
@@ -21,32 +21,39 @@
             Nenhum veículo estacionado no momento.
         </div>
 
-        <form th:if="${not #lists.isEmpty(veiculosEstacionados)}"
-              action="#" th:action="@{/veiculo/registrarSaida}" method="post" class="form">
-            <div class="form-group">
-                <label for="placaId">Selecione sua placa</label>
-                <select id="placaId" name="id" required>
-                    <option value="" disabled selected>Selecione sua placa</option>
-                    <option th:each="veiculo : ${veiculosEstacionados}"
-                            th:value="${veiculo.id}"
-                            th:text="${veiculo.placa} + ' — ' + ${veiculo.cor} + (${veiculo.modelo} != null ? ' (' + ${veiculo.modelo} + ')' : '')">
-                        Placa — Cor
-                    </option>
-                </select>
+        <div th:if="${not #lists.isEmpty(veiculosEstacionados)}" class="table-wrapper">
+            <table class="veiculos-table">
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Modelo</th>
+                        <th>Entrada</th>
+                        <th>Permanência</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="veiculo : ${veiculosEstacionados}">
+                        <td th:text="${veiculo.placa}">Placa</td>
+                        <td th:text="${veiculo.modelo}">Modelo</td>
+                        <td th:text="${#temporals.format(veiculo.horaEntrada, 'HH:mm')}">Entrada</td>
+                        <td th:text="${veiculo.tempoPermanencia}">Permanência</td>
+                        <td>
+                            <form th:action="@{/veiculo/registrarSaida}" action="#" method="post" class="inline-form"
+                                  onsubmit="return confirm('Confirmar saída?');">
+                                <input type="hidden" name="id" th:value="${veiculo.id}">
+                                <button type="submit" class="btn btn-primary">Confirmar Saída</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-                <div class="form-group full-width">
-                    <label for="observacoes">Observações</label>
-                    <input type="text" id="observacoes" name="observacoes" placeholder="Digite as observações">
-                </div>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Registrar saída</button>
-                <a href="/painel?tab=veiculos" class="btn btn-secondary">Voltar para o painel</a>
-            </div>
-        </form>
+        <div class="form-actions">
+            <a href="/painel" class="btn btn-secondary">Cancelar</a>
+        </div>
     </section>
-
     <footer class="project-footer">
         <strong>Projeto desenvolvido para o SEBRAE</strong>
         <span>Estacionamento • Gestão simples e eficiente</span>

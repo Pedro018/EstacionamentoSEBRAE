@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 @Service
 public class VeiculoServiceIMPL implements VeiculoService {
@@ -36,7 +37,10 @@ public class VeiculoServiceIMPL implements VeiculoService {
 
     @Override
     public List<VeiculoEntity> listarVeiculosEstacionados() {
-        return repository.findByEstacionadoTrueOrderByPlacaAsc();
+        return repository.findAll().stream()
+                .filter(VeiculoEntity::isEstacionado)
+                .sorted(Comparator.comparing(VeiculoEntity::getId))
+                .toList();
     }
 
     @Override
@@ -65,6 +69,14 @@ public class VeiculoServiceIMPL implements VeiculoService {
         entity.setEstacionado(false);
         entity.setHoraSaida(LocalDateTime.now());
         return repository.save(entity);
+    }
+    @Override
+    public long tempoMedioMinutos() {
+        return Math.round(repository.findAll().stream()
+                .filter(v -> v.getHoraSaida() != null)
+                .mapToLong(VeiculoEntity::getMinutosPermanencia)
+                .average()
+                .orElse(0));
     }
     private List<Veiculo> toListVeiculo(List<VeiculoEntity> entities){
         List<Veiculo> veiculos = new ArrayList<>();

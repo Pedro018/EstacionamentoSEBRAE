@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -33,11 +34,37 @@ public class LoginController {
 
     @GetMapping("/painel")
     public String painel(Model model) {
-        List<VeiculoEntity> veiculos = veiculoService.listarVeiculo();
-        long totalEstacionados = veiculos.stream().filter(VeiculoEntity::isEstacionado).count();
-        model.addAttribute("veiculos", veiculos);
-        model.addAttribute("totalEstacionados", totalEstacionados);
+        List<VeiculoEntity> estacionados = veiculoService.listarVeiculosEstacionados();
+        model.addAttribute("veiculos", estacionados);
+        model.addAttribute("totalEstacionados", estacionados.size());
+        adicionarContadores(model, estacionados.size());
         return "painel";
+    }
+
+    @GetMapping("/movimentacoes")
+    public String movimentacoes(Model model) {
+        List<VeiculoEntity> movimentacoes = new ArrayList<>(veiculoService.listarVeiculo());
+        movimentacoes.sort((a, b) -> Long.compare(b.getId(), a.getId()));
+        model.addAttribute("movimentacoes", movimentacoes);
+        model.addAttribute("totalMovimentacoes", movimentacoes.size());
+        model.addAttribute("tempoMedio", VeiculoEntity.formatarMinutos(veiculoService.tempoMedioMinutos()));
+        return "movimentacoes";
+    }
+
+    @GetMapping("/relatorios")
+    public String relatorios(Model model) {
+        long ocupadas = veiculoService.listarVeiculosEstacionados().size();
+        adicionarContadores(model, ocupadas);
+        model.addAttribute("totalMovimentacoes", veiculoService.listarVeiculo().size());
+        model.addAttribute("tempoMedio", VeiculoEntity.formatarMinutos(veiculoService.tempoMedioMinutos()));
+        model.addAttribute("ocupacaoPercentual", Math.round(ocupadas * 100.0 / VeiculoService.TOTAL_VAGAS));
+        return "relatorios";
+    }
+
+    private void adicionarContadores(Model model, long ocupadas) {
+        model.addAttribute("vagasOcupadas", ocupadas);
+        model.addAttribute("vagasDisponiveis", Math.max(0, VeiculoService.TOTAL_VAGAS - ocupadas));
+        model.addAttribute("totalVagas", VeiculoService.TOTAL_VAGAS);
     }
 
     @PostMapping("/login")

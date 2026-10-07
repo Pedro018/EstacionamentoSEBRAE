@@ -40,6 +40,10 @@
                 <span th:text="${#temporals.format(veiculo.horaEntrada, 'dd/MM/yyyy HH:mm')}">Entrada</span>
             </div>
             <div class="detail-row">
+                <span>Permanência</span>
+                <span th:text="${veiculo.tempoPermanencia}">Permanência</span>
+            </div>
+            <div class="detail-row">
                 <span>Horário de saída</span>
                 <span class="horario-saida" th:text="${#temporals.format(veiculo.horaSaida, 'dd/MM/yyyy HH:mm:ss')}">Saída</span>
             </div>
@@ -47,7 +51,7 @@
 
         <div class="form-actions">
             <a href="/veiculo/registrarSaida" class="btn btn-primary">Registrar outra saída</a>
-            <a href="/painel?tab=veiculos" class="btn btn-secondary">Voltar para o painel</a>
+            <a href="/painel" class="btn btn-secondary">Voltar para o painel</a>
         </div>
     </section>
 

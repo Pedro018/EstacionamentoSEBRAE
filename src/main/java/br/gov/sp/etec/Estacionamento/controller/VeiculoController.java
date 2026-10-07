@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("veiculo")
 public class VeiculoController {
@@ -18,9 +20,20 @@ public class VeiculoController {
     VeiculoService service;
     @PostMapping("cadastro")
     public String cadastrar(Veiculo x, RedirectAttributes redirectAttributes){
+        String placa = x.getPlaca() == null ? "" : x.getPlaca().trim().toUpperCase();
+        x.setPlaca(placa);
+        List<VeiculoEntity> estacionados = service.listarVeiculosEstacionados();
+        if (estacionados.size() >= VeiculoService.TOTAL_VAGAS) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Estacionamento lotado. Não há vagas disponíveis.");
+            return "redirect:/veiculo/registarEntrada";
+        }
+        if (estacionados.stream().anyMatch(v -> placa.equalsIgnoreCase(v.getPlaca()))) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Já existe um veículo estacionado com a placa " + placa + ".");
+            return "redirect:/veiculo/registarEntrada";
+        }
         service.cadastrarVeiculo(x);
         redirectAttributes.addFlashAttribute("mensagemSucesso", "Entrada registrada com sucesso!");
-        return "redirect:/painel?tab=veiculos";
+        return "redirect:/painel";
     }
 
     @GetMapping("registrarSaida")

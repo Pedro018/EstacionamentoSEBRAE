@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimentações | Estacionamento</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+<main class="page-container">
+    <section class="card card-wide">
+        <header class="card-header">
+            <span class="brand-badge">Estacionamento</span>
+            <h1>Movimentações</h1>
+            <p>Histórico de entradas e saídas de veículos.</p>
+        </header>
+
+        <nav class="form-actions">
+            <a href="/painel" class="btn btn-secondary">Painel</a>
+            <a href="/movimentacoes" class="btn btn-primary">Movimentações</a>
+            <a href="/relatorios" class="btn btn-secondary">Relatórios</a>
+            <a href="/" class="btn btn-secondary">Sair</a>
+        </nav>
+
+        <div th:if="${#lists.isEmpty(movimentacoes)}" class="empty-state">
+            Nenhuma movimentação registrada até o momento.
+        </div>
+        <div th:if="${not #lists.isEmpty(movimentacoes)}" class="table-wrapper">
+            <table class="veiculos-table">
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Modelo</th>
+                        <th>Entrada</th>
+                        <th>Saída</th>
+                        <th>Tempo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="mov : ${movimentacoes}">
+                        <td th:text="${mov.placa}">Placa</td>
+                        <td th:text="${mov.modelo}">Modelo</td>
+                        <td th:text="${#temporals.format(mov.horaEntrada, 'dd/MM/yyyy HH:mm')}">Entrada</td>
+                        <td th:text="${mov.horaSaida != null ? #temporals.format(mov.horaSaida, 'dd/MM/yyyy HH:mm') : '-'}">Saída</td>
+                        <td th:text="${mov.tempoPermanencia}">Tempo</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="form-footer">
+            <strong>Total de Movimentações:</strong> <span th:text="${totalMovimentacoes}">0</span>
+            |
+            <strong>Tempo Médio:</strong> <span th:text="${tempoMedio}">0m</span>
+        </p>
+    </section>
+    <footer class="project-footer">
+        <strong>Projeto desenvolvido para o SEBRAE</strong>
+        <span>Estacionamento • Gestão simples e eficiente</span>
+    </footer>
+</main>
+</body>
+</html>

@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -82,5 +83,23 @@ public class VeiculoEntity {
 
     public void setEstacionado(Boolean estacionado) {
         this.estacionado = estacionado;
+    }
+
+    public long getMinutosPermanencia() {
+        if (horaEntrada == null) {
+            return 0;
+        }
+        LocalDateTime fim = horaSaida != null ? horaSaida : LocalDateTime.now();
+        return Math.max(0, Duration.between(horaEntrada, fim).toMinutes());
+    }
+
+    public String getTempoPermanencia() {
+        return formatarMinutos(getMinutosPermanencia());
+    }
+
+    public static String formatarMinutos(long minutos) {
+        long h = minutos / 60;
+        long m = minutos % 60;
+        return h > 0 ? h + "h " + m + "m" : m + "m";
     }
 }
